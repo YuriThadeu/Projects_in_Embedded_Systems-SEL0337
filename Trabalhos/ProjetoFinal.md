@@ -2,14 +2,17 @@
 
 ## Prática X - NOME
 
-### Autor(es):
+### Autor(es)
+
 - NOME: Yuri Thadeu Oliveira Costa
 - N° USP: 14754821
+
 ***
 ***
+
 ### Guia do Projeto
 
-#### 
+####
 
 ***
 ***
