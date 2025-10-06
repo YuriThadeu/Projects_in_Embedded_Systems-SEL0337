@@ -124,6 +124,7 @@ $ sudo raspi-config
 $ sudo passwd root
 $ neofetch
 ...
+
 ```
 
 #### Resposta das Questões

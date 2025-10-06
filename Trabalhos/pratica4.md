@@ -4,8 +4,10 @@
 
 ### Autor(es)
 
-- NOME: Yuri Thadeu Oliveira Costa
-- N° USP: 14754821
+- Yuri Thadeu Oliveira Costa
+  - N° USP: 14754821
+- Fabio Roberto Alcazar Frias Junior
+  - N° USP: 14569060
 
 ***
 ***

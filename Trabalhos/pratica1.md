@@ -289,4 +289,5 @@ history | tail -25 > backup_historico.txt
 # No final de tudo, executar o comando para limpar a pasta
 sudo rm -rf /home/sel #cuidado com isso, digite corretamente!!
 history –c # limpesa do histórico
+
 ```
