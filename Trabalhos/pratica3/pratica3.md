@@ -92,9 +92,11 @@ python3 src/parte2/pwm_teste.py
 
 ### Resolução da Pratica
 
-#### PARTE 1
+#### PARTE 1 - Uso de GPIO e perifericos
 
 ##### Blink Led da Parte 1
+
+**Arquivo de envolvidos:** [pratica3_11.py](pratica3_11.py) e [pratica3_12.py](pratica3_12.py)
 
 ```py
 from gpiozero import LED, Button
@@ -243,9 +245,14 @@ A sequencia de comandos usados na pratica foram exportados em TXT e o conteuso d
 
 Como pode ser visto nesse codigo, foi criado o Ambiente Virtual na Raspbarry Py 3 do laboratório, assim como a instação dos bibliotecas necessárias dentro do ambiente. Todos os codigos foram testados e mostrados para o professor o funcionamento.
 
+Para resolver os requisitos que foram pedido também foram usados os codifos Shell que constam no arquivo [pop_a3.md](pop_a3.md).
+
 Você também pode ver as novas versões dos codigos que estão presentes nos arquivos da [Pratica 3 - Parte 1.1](pratica3_11.py) e nos arquivos da [Pratica 3 - Parte 1.](pratica3_12.py)
 
 <br>
+
+***
+***
 
 #### PARTE 2
 
@@ -299,7 +306,7 @@ PWM (*Pulse Width Modulation*) é a técnica padrão para modular potência perc
 
 ##### Parte 2.2 — Controle integrado com **DS18B20**, **LEDs**, **Servos** e **Buzzer** (1-Wire + PWM)
 
-**Arquivo de referência:** [`pratica3_2_PWMaplication.py`](pratica3_2_PWMaplication.py)
+**Arquivo de envolvidos:** [`pratica3_2_PWMaplication.py`](pratica3_2_PWMaplication.py)
 
 **Esquemático da montagem:**  
 ![Esquemático Parte 2.2](esquematico_parte2_2.jpg)
@@ -425,7 +432,8 @@ python3 pratica3_2_PWMaplication.py
 
 ##### Parte 3 — Threads com PWM e Botão (LEDs nos GPIO27/22 e botão no GPIO2)
 
-**Arquivos envolvidos:** único script Python (conforme apresentado nesta parte).  
+**Arquivos envolvidos:** [parte3.py](parte3.py)
+
 **Vídeo de funcionamento:** [▶️ funcionamento_pratica3_3.mp4](funcionamento_pratica3_3.mp4)
 
 ***
