@@ -1,0 +1,26 @@
+yurit@YPC:/home/sel/SEL0337$ history    
+    1  echo "inicio da pratica 1"
+    2  pwd
+    3  sudo mkdir /home/sel
+    4  sudo mkdir /home/sel/SEL0337
+    5  cd /home/sel/SEL0337
+    6  pwd
+    7  sudo mkdir pratica1
+    8  cd pratica1
+    9  cd ..
+   10  ls
+   11  cd pratica1
+   12  sudo touch helloworld.txt
+   13  sudo nano helloworld.txt
+   14  cat helloworld.txt
+   15  sudo find . -name "*.txt"
+   16  grep "14754821" helloworld.txt
+   17  sudo cp helloworld.txt helloworld_copia.txt
+   18  sudo mv helloworld_copia.txt ..
+   19  sudo rm helloworld.txt
+   20  cd ..
+   21  sudo rmdir pratica1
+   22  neofetch
+   23  sudo ls -l /home/sel
+   24  history | tail -25 > backup_hist.txt
+   25  history

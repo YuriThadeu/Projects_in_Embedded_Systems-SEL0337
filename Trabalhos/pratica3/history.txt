@@ -1,0 +1,32 @@
+1	cd
+2	ls
+3	cd YYFF
+4	ls
+5	cd pratica3
+6	ls
+7	python3 -m venv venv
+8	source venv/bin/activate
+9	sudo apt-get -y  update
+10	sudo apt-get -y upgrade
+11	pip install gpiozero
+12	pip freeze
+13	pip install lgpio
+14	pip install RPi
+15	pip install pigpio
+16	pip freeze
+17	nano parte11.py
+18	nano parte12.py
+19	reboot
+20	cd
+21	ls
+22	cd YYFF
+23	ls
+24	cd pratica3
+25	ls
+26	source venv/bin/activate
+27	pinout
+28	python parte11.py
+29	clear
+30	python parte12.py
+31	clear
+32	history
