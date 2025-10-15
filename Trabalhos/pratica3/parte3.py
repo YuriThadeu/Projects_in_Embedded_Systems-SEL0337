@@ -1,106 +1,167 @@
-import os
 import time
-import random
-import signal
+import threading
 import RPi.GPIO as GPIO
-from multiprocessing import Process, Event
 
-# =========================
-# CONFIGURAÇÕES
-# =========================
-# Numeração física (BOARD) para manter compatibilidade com o exemplo original.
-# Se preferir BCM, troque para GPIO.setmode(GPIO.BCM) e ajuste o pino.
-LED_BOARD_PIN = 7          # pino físico 7 (exemplo original)
-BLINK_INTERVAL_S = 1.0     # período do pisca-pisca (s)
-COUNT_INTERVAL_S = 2.0     # período da contagem aleatória (s)
+def led1_fade_worker(stop_event):
+    """LED1 (GPIO27): fade 0→100→0 com frequência fixa e passo próprio."""
+    LED1_PIN  = 27     # BCM
+    FREQ_HZ   = 1200   # Hz (mais alta para diferenciar do LED2)
+    STEP      = 4      # passo de duty (%)
+    DT        = 0.008  # s entre passos
 
-# =========================
-# FUNÇÕES DOS PROCESSOS
-# =========================
-def gpio_blink(stop_evt: Event, pin: int = LED_BOARD_PIN, interval: float = BLINK_INTERVAL_S):
-    """Pisca um LED no pino indicado até o evento de parada ser acionado."""
-    # Cada processo precisa configurar seu próprio contexto de GPIO
     GPIO.setwarnings(False)
-    GPIO.setmode(GPIO.BOARD)
-    GPIO.setup(pin, GPIO.OUT, initial=GPIO.LOW)
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(LED1_PIN, GPIO.OUT, initial=GPIO.LOW)
 
-    print(f"[Blink] PID={os.getpid()} | Iniciando pisca no pino BOARD {pin} (intervalo={interval:.1f}s)")
+    pwm = GPIO.PWM(LED1_PIN, FREQ_HZ)
+    pwm.start(0)
+    print(f"[LED1] Iniciado: freq={FREQ_HZ} Hz, step={STEP}%, dt={DT}s")
 
     try:
-        state = False
-        while not stop_evt.is_set():
-            state = not state
-            GPIO.output(pin, GPIO.HIGH if state else GPIO.LOW)
-            print(f"[Blink] LED {'aceso' if state else 'apagado'}")
-            time.sleep(interval)
+        while not stop_event.is_set():
+            # Sobe
+            dc = 0
+            while dc <= 100 and not stop_event.is_set():
+                pwm.ChangeDutyCycle(dc)
+                time.sleep(DT)
+                dc += STEP
+            # Desce
+            dc = 100
+            while dc >= 0 and not stop_event.is_set():
+                pwm.ChangeDutyCycle(dc)
+                time.sleep(DT)
+                dc -= STEP
     finally:
-        # Limpeza apenas do pino usado por este processo
-        try:
-            GPIO.output(pin, GPIO.LOW)
-        except Exception:
-            pass
-        GPIO.cleanup()
-        print(f"[Blink] PID={os.getpid()} | Finalizado e GPIO liberado.")
+        pwm.stop()
+        GPIO.cleanup(LED1_PIN)
+        print("[LED1] Finalizado e GPIO liberado.")
 
+def led2_fade_button_worker(stop_event):
+    """
+    LED2 (GPIO22): fade 0→100→0.
+    Enquanto o botão (GPIO2, PUD_UP) estiver PRESSIONADO:
+      - frequência = FREQ_HIGH
+      - passo do duty = STEP_FAST (>= 3x do inicial)
+    Ao SOLTAR, reverte para frequência baixa e passo inicial.
+    """
+    LED2_PIN    = 22     # BCM
+    BUTTON_PIN  = 2      # BCM
+    FREQ_LOW    = 200    # Hz (inicial — bem menor que LED1)
+    FREQ_HIGH   = 1500   # Hz (quando pressionado)
+    STEP_INIT   = 5      # passo de duty (%) inicial
+    STEP_FAST   = STEP_INIT * 3  # 3x maior
+    DT          = 0.010  # s entre passos
+    BOUNCE_MS   = 50     # debounce leve; vamos detectar transições por leitura
 
-def random_count(stop_evt: Event, interval: float = COUNT_INTERVAL_S):
-    """Gera e exibe números aleatórios até o evento de parada ser acionado."""
-    print(f"[Count] PID={os.getpid()} | Iniciando contagem aleatória (intervalo={interval:.1f}s)")
+    GPIO.setwarnings(False)
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(LED2_PIN,   GPIO.OUT, initial=GPIO.LOW)
+    GPIO.setup(BUTTON_PIN, GPIO.IN,  pull_up_down=GPIO.PUD_UP)  # botão → GND
+
+    pwm = GPIO.PWM(LED2_PIN, FREQ_LOW)
+    pwm.start(0)
+
+    # Estado do botão (pull-up): HIGH = solto, LOW = pressionado
+    last_pressed = GPIO.input(BUTTON_PIN) == GPIO.LOW
+    print(f"[LED2] Iniciado: freq_inicial={FREQ_LOW} Hz, step_inicial={STEP_INIT}%, "
+          f"freq_press={FREQ_HIGH} Hz, step_press={STEP_FAST}%")
+
+    def read_pressed():
+        # Leitura simples + pequena espera para amortecer bounces
+        pressed = GPIO.input(BUTTON_PIN) == GPIO.LOW
+        time.sleep(BOUNCE_MS / 1000.0)
+        return pressed
+
     try:
-        while not stop_evt.is_set():
-            count = random.randint(1, 100)
-            print(f"[Count] valor: {count}")
-            # Dorme em pequenos passos para responder rápido ao stop_evt
-            t0 = time.time()
-            while (time.time() - t0) < interval and not stop_evt.is_set():
-                time.sleep(0.05)
+        while not stop_event.is_set():
+            # Decide parâmetros conforme estado do botão
+            pressed = GPIO.input(BUTTON_PIN) == GPIO.LOW
+            if pressed != last_pressed:
+                # Transição detectada → confirma com quick debounce
+                pressed = read_pressed()
+                if pressed != last_pressed:
+                    last_pressed = pressed
+                    if pressed:
+                        print(f"[BOTÃO] Pressionado! LED2 → freq={FREQ_HIGH} Hz, step={STEP_FAST}%")
+                    else:
+                        print(f"[BOTÃO] Solto! LED2 → freq={FREQ_LOW} Hz, step={STEP_INIT}%")
+
+            cur_freq = FREQ_HIGH if last_pressed else FREQ_LOW
+            cur_step = STEP_FAST if last_pressed else STEP_INIT
+            pwm.ChangeFrequency(cur_freq)
+
+            # --- Fade UP (0→100) com passo dinâmico (reavalia a cada iteração) ---
+            dc = 0
+            while dc <= 100 and not stop_event.is_set():
+                pwm.ChangeDutyCycle(dc)
+                time.sleep(DT)
+
+                # Atualiza estado (pode mudar no meio do fade)
+                pressed_now = GPIO.input(BUTTON_PIN) == GPIO.LOW
+                if pressed_now != last_pressed:
+                    pressed_now = read_pressed()
+                    if pressed_now != last_pressed:
+                        last_pressed = pressed_now
+                        if last_pressed:
+                            print(f"[BOTÃO] Pressionado! LED2 → freq={FREQ_HIGH} Hz, step={STEP_FAST}%")
+                        else:
+                            print(f"[BOTÃO] Solto! LED2 → freq={FREQ_LOW} Hz, step={STEP_INIT}%")
+
+                cur_freq = FREQ_HIGH if last_pressed else FREQ_LOW
+                cur_step = STEP_FAST if last_pressed else STEP_INIT
+                pwm.ChangeFrequency(cur_freq)
+                dc += cur_step  # passo dinâmico
+
+            # --- Fade DOWN (100→0) idem ---
+            dc = 100
+            while dc >= 0 and not stop_event.is_set():
+                pwm.ChangeDutyCycle(dc)
+                time.sleep(DT)
+
+                pressed_now = GPIO.input(BUTTON_PIN) == GPIO.LOW
+                if pressed_now != last_pressed:
+                    pressed_now = read_pressed()
+                    if pressed_now != last_pressed:
+                        last_pressed = pressed_now
+                        if last_pressed:
+                            print(f"[BOTÃO] Pressionado! LED2 → freq={FREQ_HIGH} Hz, step={STEP_FAST}%")
+                        else:
+                            print(f"[BOTÃO] Solto! LED2 → freq={FREQ_LOW} Hz, step={STEP_INIT}%")
+
+                cur_freq = FREQ_HIGH if last_pressed else FREQ_LOW
+                cur_step = STEP_FAST if last_pressed else STEP_INIT
+                pwm.ChangeFrequency(cur_freq)
+                dc -= cur_step  # passo dinâmico
+
     finally:
-        print(f"[Count] PID={os.getpid()} | Finalizado.")
+        pwm.stop()
+        GPIO.cleanup([LED2_PIN, BUTTON_PIN])
+        print("[LED2] Finalizado e GPIO liberado.")
 
-
-# =========================
-# MAIN
-# =========================
 def main():
-    stop_evt = Event()
+    stop_event = threading.Event()
+    t1 = threading.Thread(target=led1_fade_worker,        args=(stop_event,), name="LED1",     daemon=True)
+    # declara thread do LED1
+    t2 = threading.Thread(target=led2_fade_button_worker, args=(stop_event,), name="LED2_BTN", daemon=True)
+    # declara thread do LED2 + botão
 
-    # Handler para Ctrl+C / SIGTERM
-    def handle_signal(signum, frame):
-        print(f"\n[Sinal] Recebido {signum}. Encerrando processos...")
-        stop_evt.set()
+    print("Iniciando threads (LED1 e LED2+Botão).")
+    print("→ Sem botão: LED1 1200 Hz / step=4%; LED2 200 Hz / step=5% (diferença clara).")
+    print("→ Botão pressionado (GPIO2): LED2 sobe p/ 1500 Hz e step=15% (>= 3x), soltou → volta ao normal.")
 
-    signal.signal(signal.SIGINT, handle_signal)   # Ctrl+C
-    signal.signal(signal.SIGTERM, handle_signal)  # kill/stop
-
-    p_blink = Process(target=gpio_blink, name="BlinkLED", args=(stop_evt,))
-    p_count = Process(target=random_count, name="RandomCount", args=(stop_evt,))
-
-    print("[Main] Iniciando processos...")
-    p_blink.start()
-    p_count.start()
-    print(f"[Main] BlinkLED PID={p_blink.pid} | RandomCount PID={p_count.pid}")
-
+    t1.start(); t2.start() # inicia threads
     try:
-        # Aguarda até que ambos encerrem (normalmente só após Ctrl+C)
-        while p_blink.is_alive() or p_count.is_alive():
+        while t1.is_alive() and t2.is_alive():
             time.sleep(0.2)
+    except KeyboardInterrupt: # verifica interrupção pelo usuário
+        print("\n[Main] Encerrando (Ctrl+C).")
     finally:
-        # Solicita parada
-        stop_evt.set()
-
-        # Tenta encerrar de forma graciosa
-        for p in (p_blink, p_count):
-            if p.is_alive():
-                p.join(timeout=2.0)
-
-        # Se ainda vivos, força término
-        for p in (p_blink, p_count):
-            if p.is_alive():
-                print(f"[Main] Forçando término de PID {p.pid}...")
-                p.terminate()
-                p.join()
-
-        print("[Main] Todos os processos finalizados.")
+        stop_event.set() # sinaliza threads para pararem
+        t1.join(timeout=2.0) # aguarda threads encerrarem
+        t2.join(timeout=2.0) # aguarda threads encerrarem
+        try: GPIO.cleanup() # tenta liberar GPIOs (se não tiverem sido liberadas)
+        except Exception: pass
+        print("[Main] Fim.")
 
 if __name__ == "__main__":
     main()

@@ -423,5 +423,72 @@ python3 pratica3_2_PWMaplication.py
 ***
 <br>
 
-#### PARTE 3
+##### Parte 3 — Threads com PWM e Botão (LEDs nos GPIO27/22 e botão no GPIO2)
 
+**Arquivos envolvidos:** único script Python (conforme apresentado nesta parte).  
+**Vídeo de funcionamento:** [▶️ funcionamento_pratica3_3.mp4](funcionamento_pratica3_3.mp4)
+
+***
+
+###### Objetivo
+Demonstrar **concorrência com threads** no Raspberry Pi: dois **LEDs** executando **fade PWM** em paralelo, enquanto um **botão** altera **dinamicamente** os parâmetros do PWM de um dos LEDs. A atividade evidencia (i) como **tarefas independentes** podem rodar ao mesmo tempo, (ii) como **entradas** (botão) podem **mudar o comportamento** de uma saída (PWM) **em tempo real**.
+
+***
+
+###### O que o código faz
+- **Thread 1 (LED1 – GPIO27):** executa um **fade 0→100→0** com **frequência fixa** e passo/tempo próprios (ex.: 1200 Hz, passo 4%, `dt=0.008 s`).  
+- **Thread 2 (LED2 – GPIO22):** executa o mesmo **fade** porém:
+  - **Sem botão pressionado:** usa **frequência baixa** (ex.: 200 Hz) e **passo pequeno** (ex.: 5%) — propositalmente **diferentes** do LED1 para facilitar comparação visual.
+  - **Botão (GPIO2) pressionado:** alterna para **frequência alta** (ex.: 1500 Hz) **e** aumenta o **passo do duty** para **≥ 3× o inicial** (ex.: 15%) — o fade fica percebivelmente **mais rápido**.
+  - **Ao soltar o botão:** retorna aos parâmetros **originais** (200 Hz / passo 5%).
+  - A cada transição **pressionar/soltar**, o código **imprime** uma mensagem indicando a nova frequência e passo.
+- **Encerramento:** `Ctrl+C` aciona o **evento de parada**, cada thread encerra seu PWM e limpa **apenas** os pinos que usou (`GPIO.cleanup`).
+
+***
+
+###### Ligações (BCM)
+- **LED1**: GPIO **27** → **resistor 220–330 Ω** → LED → **GND**  
+- **LED2**: GPIO **22** → **resistor 220–330 Ω** → LED → **GND**  
+- **Botão**: GPIO **2** (configurado com `PUD_UP`) → **botão** → **GND**
+
+> Com `pull_up` interno habilitado, o pino lê **HIGH** quando solto e **LOW** quando o botão fecha com GND.
+
+***
+
+###### Como executar
+
+```bash
+python3 parte3.py
+````
+
+- Na inicialização, o terminal mostra a **frequência/passo** de cada thread.
+- Pressione o **botão (GPIO2)** para alternar os parâmetros do LED2; observe as **mensagens** no terminal e a mudança do **fade**.
+- **Ctrl+C** para sair com limpeza dos pinos.
+
+***
+
+###### Por que configurar parâmetros distintos?
+
+- **Comparação visual imediata**: LED1 começa com **freq. alta** e **passo menor**, enquanto LED2 inicia com **freq. baixa** e **passo maior/diferente** — a diferença é clara **sem** apertar o botão.
+- **Demonstração dinâmica**: ao **pressionar** o botão, o LED2 muda para **freq. alta** e **passo ≥3×**, deixando o fade **nitidamente mais rápido**; ao **soltar**, retorna ao perfil **original**.
+
+***
+
+###### Boas práticas adotadas
+
+- **Encapsulamento por thread**: cada “código” (LED1/LED2+botão) tem **constantes e GPIO** definidos **dentro** da função que usa.
+- **Limpeza de GPIO por pino**: cada thread faz `cleanup` **apenas** dos pinos que manipula; o `main` faz uma limpeza **defensiva** ao final.
+- **Debounce** e leitura robusta do botão: o estado é conferido e as transições são **anunciadas** com prints.
+
+***
+
+###### Evidência de funcionamento
+
+- Consulte o vídeo: **funcionamento_pratica3_3.mp4** — mostra:
+
+  1. Diferença inicial entre LED1 (freq. alta/passo pequeno) e LED2 (freq. baixa/passo distinto).
+  2. **Pressionar** o botão: LED2 acelera (freq. alta + passo ≥3×).
+  3. **Soltar** o botão: LED2 volta ao perfil original, enquanto LED1 permanece constante.
+
+***
+***
