@@ -432,7 +432,7 @@ python3 pratica3_2_PWMaplication.py
 
 ##### Parte 3 — Threads com PWM e Botão (LEDs nos GPIO27/22 e botão no GPIO2)
 
-**Arquivos envolvidos:** [parte3.py](parte3.py)
+**Arquivos envolvidos:** [pratica3_3.py](pratica3_3.py)
 
 **Vídeo de funcionamento:** [▶️ funcionamento_pratica3_3.mp4](funcionamento_pratica3_3.mp4)
 
