@@ -301,6 +301,10 @@ PWM (*Pulse Width Modulation*) é a técnica padrão para modular potência perc
 - Validar frequência/duty no **osciloscópio**.  
 - Encapsular em **funções/classes** para reuso em outros módulos.
 
+**Variação do duty cycle do sinal PWM e visualização no osciloscópio**
+
+![Imagem do Osciloscópio]()
+
 ***
 ***
 
