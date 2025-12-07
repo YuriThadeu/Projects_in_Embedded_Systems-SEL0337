@@ -1,0 +1,18 @@
+[Unit]
+Description=Pratica 5 - Reconhecimento Facial e Blink
+After=multi-user.target
+
+[Service]
+Type=simple
+# Aponta para o launcher que criamos no Passo 1
+ExecStart=/home/embarcados/embarcados/pratica5/git/Projects_in_Embedded_Systems-SEL0337/Trabalhos/pratica5/parte1/launcher.sh
+
+# Executa como root para não ter erro de permissão na GPIO ou Câmera
+User=root
+
+# Se o programa fechar inesperadamente (crash), tenta reiniciar após 5s
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
