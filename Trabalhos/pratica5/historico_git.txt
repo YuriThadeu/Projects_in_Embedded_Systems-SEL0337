@@ -1,0 +1,151 @@
+commit 9b685d1c534a1765eff207706b6c6745e10d54ba
+Author: YuriThadeu <Yuri.thadeu@hotmail.com>
+Date:   Sat Dec 6 23:48:20 2025 -0300
+
+    Refatorar código do blink_final.py para incluir verificação do botão e melhorar a legibilidade; atualizar serviço para definir variáveis de ambiente necessárias.
+
+commit 9b6de6088192aa43586cb5ace71b81897cafcd92
+Author: YuriThadeu <Yuri.thadeu@hotmail.com>
+Date:   Sat Dec 6 22:14:37 2025 -0300
+
+    Adicionar script launcher e serviço para reconhecimento facial e controle de LED
+
+commit 6477ceb4d8ba4cd7710d9a4fb0007b20808a5f0b
+Author: YuriThadeu <Yuri.thadeu@hotmail.com>
+Date:   Sat Dec 6 20:08:02 2025 -0300
+
+    Atualizar imagem do usuário mestre para a prática 5, parte 3
+
+commit c2ac8b14033ad71e6ba83e63fb22f29e50dcd66f
+Author: YuriThadeu <Yuri.thadeu@hotmail.com>
+Date:   Sat Dec 6 20:02:10 2025 -0300
+
+    Implement face detection access control system with Raspberry Pi and OpenCV
+    
+    - Added `pvc_rasp.py` script for face recognition using OpenCV.
+    - Configured GPIO pins for LED indicators, button input, and buzzer output.
+    - Integrated Haar Cascade classifier for face detection.
+    - Implemented logic to capture and compare live face against a reference image.
+    - Added feedback mechanisms via LEDs and buzzer for access granted/denied scenarios.
+    - Included error handling for missing reference image and resizing issues.
+    - Created `usuario_mestre.jpg` as the reference image for face recognition.
+
+commit 612334dcb9e4b66c0b88518d1211694c528b2207
+Author: YuriThadeu <Yuri.thadeu@hotmail.com>
+Date:   Wed Nov 26 21:12:17 2025 -0300
+
+    Refactor code structure for improved readability and maintainability
+
+commit af6c33777dc6979cbcf2237f1d85b69ae925a36b
+Merge: 222af2d f650217
+Author: YuriThadeu <106408096+YuriThadeu@users.noreply.github.com>
+Date:   Mon Nov 24 10:55:51 2025 -0300
+
+    Merge pull request #1 from fabiooju/develop
+    
+    Develop
+
+commit f650217423f9ff02810161dae787456233585269
+Author: Fábio Roberto Alcazar Frias Júnior <fabio.frias@wr.sc.usp.br>
+Date:   Mon Nov 24 10:47:47 2025 -0300
+
+    add texts from exercises solutions
+
+commit 99c1c972793d7bee47a5b5198d8f9938d94a2b0b
+Author: Fábio Roberto Alcazar Frias Júnior <fabio.frias@wr.sc.usp.br>
+Date:   Mon Nov 17 11:06:45 2025 -0300
+
+    add photos and videos
+    
+    add photo from the electronics assembly and video from terminal print
+
+commit 935078ddde268d7e9240a2a7e3ac8576c2fa6510
+Author: Fábio Roberto Alcazar Frias Júnior <fabio.frias@wr.sc.usp.br>
+Date:   Mon Nov 17 10:51:24 2025 -0300
+
+    add .py and .c files
+    
+    add files from i2c comunnication between arduino and raspberry pi 3
+
+commit 222af2d4ec99fc2f5201af8e584b89f67bcb0343
+Author: YuriThadeu <Yuri.thadeu@hotmail.com>
+Date:   Mon Nov 17 10:51:15 2025 -0300
+
+    Remove course materials and completed project files
+    
+    Cleans up the repository by deleting lecture PDFs and Markdown documents related to course practices and the final project. Reduces clutter and focuses the repo on relevant ongoing work. Adds a note on PWM duty cycle visualization.
+
+commit f279884a2838858d9024424970d5f99e3c50870f
+Author: YuriThadeu <Yuri.thadeu@hotmail.com>
+Date:   Wed Oct 15 23:04:31 2025 -0300
+
+    Atualiza referências de arquivos na Prática 3 e adiciona implementação da Parte 3 com threads para controle de LEDs.
+
+commit 6869805215b0014895c99113f52643b469fb70e6
+Author: YuriThadeu <Yuri.thadeu@hotmail.com>
+Date:   Tue Oct 14 23:39:00 2025 -0300
+
+    ajustes parte 3/2
+
+commit 136ea9e44b5d50d59b2647b8315e1e0f12e19946
+Author: YuriThadeu <Yuri.thadeu@hotmail.com>
+Date:   Tue Oct 14 23:28:30 2025 -0300
+
+    atualização parte 3
+
+commit a8274b2a8e6f64eb33efbbc31a806877c6c51b95
+Author: YuriThadeu <Yuri.thadeu@hotmail.com>
+Date:   Tue Oct 14 22:44:45 2025 -0300
+
+    Ajuste de pastas dos trabalhos, criação dos arquivos da parte 2 e 3 da pratica 3 e comentário nos codigos existenes
+
+commit 02068b8fa11c7aa6f2b5e69b7cd40fa9b0848a3c
+Author: YuriThadeu <Yuri.thadeu@hotmail.com>
+Date:   Mon Oct 6 12:06:41 2025 -0300
+
+    Refactor code structure for improved readability and maintainability
+
+commit f5c61b2e129e560499c4a00ba24a11a660fb3e95
+Author: YuriThadeu <Yuri.thadeu@hotmail.com>
+Date:   Tue Sep 2 22:44:20 2025 -0300
+
+    Atualiza a Prática 2 com instruções detalhadas sobre instalação do Raspberry Pi OS e formatação do documento.
+
+commit d85bf736bf674636d037d7696675e0105ff2443c
+Author: YuriThadeu <Yuri.thadeu@hotmail.com>
+Date:   Tue Sep 2 22:11:56 2025 -0300
+
+    Atualiza a prática 2 com informações detalhadas sobre instalação do Raspberry Pi OS, incluindo roteiro e formato de entrega.
+
+commit 64d14fb89951ff383da59a8319d6af18e3b9a124
+Author: YuriThadeu <Yuri.thadeu@hotmail.com>
+Date:   Mon Aug 25 17:43:30 2025 -0300
+
+    Adiciona respostas e explicações detalhadas para a Prática 1, incluindo comandos utilizados e saídas do terminal
+
+commit 62651881257a954a306b2809089b79b344af2299
+Author: YuriThadeu <Yuri.thadeu@hotmail.com>
+Date:   Tue Aug 19 23:06:14 2025 -0300
+
+    Ajusta formatação e remove quebras desnecessárias nos arquivos de prática e README.md
+
+commit 1c1be4cc59017f5324ce729a8ee188d25e9d2a6b
+Author: YuriThadeu <Yuri.thadeu@hotmail.com>
+Date:   Tue Aug 19 22:42:21 2025 -0300
+
+    Refactor code structure for improved readability and maintainability
+
+commit de269649f6d8c317541b26fe27cd79bc744ae7a9
+Author: YuriThadeu <106408096+YuriThadeu@users.noreply.github.com>
+Date:   Mon Aug 11 18:52:54 2025 -0300
+
+    Update README.md
+    
+    
+    ajuste
+
+commit 9059186470176d1e52daefcd716b196c67383263
+Author: YuriThadeu <106408096+YuriThadeu@users.noreply.github.com>
+Date:   Mon Aug 11 18:49:12 2025 -0300
+
+    Initial commit
