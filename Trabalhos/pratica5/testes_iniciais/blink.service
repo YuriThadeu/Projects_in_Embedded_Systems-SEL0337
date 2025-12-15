@@ -1,0 +1,11 @@
+[Unit]
+Description= Blink LED
+After=multi-user.target
+
+[Service]
+ExecStart=/home/embarcados/embarcados/pratica5/blink.sh
+#ExecStop=
+user=embarcados
+
+[Install]
+WantedBy=multi-user.target

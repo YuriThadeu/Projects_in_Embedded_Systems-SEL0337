@@ -1,0 +1,24 @@
+[Unit]
+Description=Pratica 5 - Reconhecimento Facial e Blink
+After=multi-user.target
+
+[Service]
+Type=simple
+# Aponta para o launcher
+ExecStart=/home/embarcados/embarcados/pratica5/git/Projects_in_Embedded_Systems-SEL0337/Trabalhos/pratica5/parte1/launcher.sh
+
+
+# --- AS LINHAS QUE FALTAVAM ---
+# Define que a janela deve aparecer na tela principal (:0)
+Environment="DISPLAY=:0"
+# Define onde está a permissão de acesso à tela do usuário embarcados
+Environment="XAUTHORITY=/home/embarcados/.Xauthority"
+
+# Usuário dono da tela (Correto)
+User=embarcados
+
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
