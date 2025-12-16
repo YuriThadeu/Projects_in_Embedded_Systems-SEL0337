@@ -1,6 +1,6 @@
 # Sistemas de tempo real - RTOS
 
-## Prática 6 - trabalhando com FreeRTOS com ESP32/STM32
+## Prática 6 - Trabalhando com FreeRTOS com ESP32/STM32
 
 ### Autor(es)
 
