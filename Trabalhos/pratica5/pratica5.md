@@ -61,7 +61,7 @@ Com a câmera funcional, desenvolvemos dois scripts principais em Python utiliza
       - *Código:* [parte3/pvc/_rasp.py](parte3/pvc_rasp.py)
       - *Recursos:* [parte3/haarcascade/_frontalface/_default.xml](parte3/haarcascade_frontalface_default.xml)
 
------
+***
 
 ### ⚙️ Etapa 3: Integração e Automação (Parte 1)
 
@@ -99,7 +99,7 @@ Durante a integração, o serviço falhou com erro `203/EXEC Permission denied`.
 chmod +x /home/embarcados/embarcados/pratica5/git/Projects_in_Embedded_Systems-SEL0337/Trabalhos/pratica5/parte1/launcher.sh
 ```
 
------
+***
 
 ### 📂 Etapa 4: Documentação e Versionamento (Parte 2)
 
@@ -107,9 +107,9 @@ Durante todo o desenvolvimento, utilizamos o **Git** para controle de versão, g
 
 - **Log de Histórico Git:** [parte2/historico/_git.txt](parte2/historico_git.txt)
 
------
+***
 
------
+***
 
 ### 🏁 Conclusão e Metodologia
 
@@ -119,9 +119,9 @@ Optou-se por isolar primeiramente o problema de hardware (testes iniciais), gara
 
 Essa estratégia permitiu diagnosticar e corrigir falhas específicas (como a incompatibilidade da câmera CSI e problemas de permissão gráfica) de forma isolada, resultando em um sistema robusto onde a orquestração final apenas une componentes já validados. A documentação via Git (Parte 2) permeou todo o processo, registrando a evolução do projeto passo a passo.
 
------
+***
 
------
+***
 
 ### 🖼️ Anexos e Demonstração
 
